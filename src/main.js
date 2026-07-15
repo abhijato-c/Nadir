@@ -4,9 +4,9 @@ import SatWorker from '/helpers/SatWorker.js?worker';
 
 // Setup viewport and variables
 const viewer = new Viewer('cesiumContainer', {
-	baseLayer: new ImageryLayer(new UrlTemplateImageryProvider({
-		url: `https://api.maptiler.com/maps/hybrid-v4/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_KEY}`
-	})),
+	//baseLayer: new ImageryLayer(new UrlTemplateImageryProvider({
+	//	url: `https://api.maptiler.com/maps/hybrid-v4/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_KEY}`
+	//})),
 	baseLayerPicker: false,
 	fullScreenButton: false,
 	vrButton: false,
