@@ -1,8 +1,9 @@
-import { Viewer, Cartesian3, Color, JulianDate, PointPrimitiveCollection, ScreenSpaceEventHandler, ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
+import { Ion, Viewer, Cartesian3, Color, JulianDate, PointPrimitiveCollection, ScreenSpaceEventHandler, ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
 import { twoline2satrec, gstime, eciToGeodetic, propagate } from 'satellite.js';
 import SatWorker from '/helpers/SatWorker.js?worker';
 
 // Setup viewport and variables
+Ion.defaultAccessToken = import.meta.env.VITE_token;
 const viewer = new Viewer('cesiumContainer', {
 	//baseLayer: new ImageryLayer(new UrlTemplateImageryProvider({
 	//	url: `https://api.maptiler.com/maps/hybrid-v4/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_KEY}`
