@@ -1,6 +1,8 @@
 import { Ion, Viewer, Cartesian3, Color, JulianDate, PointPrimitiveCollection, ScreenSpaceEventHandler, ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
 import { twoline2satrec, gstime, eciToGeodetic, propagate } from 'satellite.js';
+import { inject } from "@vercel/analytics";
 import SatWorker from '/helpers/SatWorker.js?worker';
+inject();
 
 // Setup viewport and variables
 Ion.defaultAccessToken = import.meta.env.VITE_token;
