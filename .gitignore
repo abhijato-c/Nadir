@@ -31,3 +31,4 @@ dist-ssr
 .wakatime-project
 .gitignore
 test.py
+db.json

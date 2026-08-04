@@ -125,6 +125,9 @@ async function Init() {
 	const SatrecMap = new Map();
 	CatalogRes.forEach(sat => {
 		// Initialize the country to launch site mapping
+		sat.country = sat.country ?? "null";
+		if (!sat.launch_site) sat.launch_site = "Unknown";
+
 		if (!CountryToSites.has(sat.country)) 
 			CountryToSites.set(sat.country, new Set());
 		CountryToSites.get(sat.country).add(sat.launch_site);
@@ -356,7 +359,7 @@ window.SatClicked = async function (SatId) {
 	document.getElementById("DetailNorad").textContent = Detail.norad_id;
 	document.getElementById("DetailIntl").textContent = Detail.intl_designator;
 	document.getElementById("DetailDate").textContent = Detail.launch_date.split('T')[0];
-	document.getElementById("DetailCountry").textContent = Detail.country;
+	document.getElementById("DetailCountry").textContent = Object.keys(Countries).find(c => Countries[c] === Detail.country) || Detail.country;
 	document.getElementById("DetailSite").textContent = Detail.launch_site;
 	document.getElementById("DetailApoapsis").textContent = Detail.apoapsis;
 	document.getElementById("DetailPeriapsis").textContent = Detail.periapsis;

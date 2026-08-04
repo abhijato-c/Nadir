@@ -83,6 +83,7 @@
     "Singapore": "SING",
     "Singapore/Taiwan Joint Payload": "STCT",
     "Slovenia": "SVN",
+    "Slovakia": "SVK",
     "Solomon Islands": "SLB",
     "South Africa": "SAFR",
     "South Korea": "SKOR",
@@ -101,5 +102,6 @@
     "Uruguay": "URY",
     "USA/Brazil Partnership": "USBZ",
     "Venezuela": "VENZ",
-    "Vietnam": "VTNM"
+    "Vietnam": "VTNM",
+    "Unknown/Unlisted": null
 }
