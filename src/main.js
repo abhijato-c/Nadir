@@ -1,7 +1,9 @@
 import { Ion, Viewer, Cartesian3, Color, JulianDate, PointPrimitiveCollection, ScreenSpaceEventHandler, ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
-import { twoline2satrec, gstime, eciToGeodetic, propagate } from 'satellite.js';
+import { twoline2satrec, gstime, eciToGeodetic, propagate } from "satellite.js";
 import { inject } from "@vercel/analytics";
-import SatWorker from '/helpers/SatWorker.js?worker';
+import SatWorker from "/helpers/SatWorker.js?worker";
+import Countries from "../data/Countries.json";
+
 inject();
 
 // Setup viewport and variables
@@ -60,8 +62,7 @@ const HoverHighlight = Points.add({
 });
 
 let ImageNames = [];
-let Countries = {};
-let Sites = {};
+let CountryToSites = new Map();
 let PageIndex = 0;
 let ActiveIds = null;
 let TrackingId = null;
@@ -93,15 +94,6 @@ async function Init() {
 	// Get the list of images
 	const ImageReq = await fetch('/Satellites/ImageNames.json');
 	ImageNames = await ImageReq.json();
-
-	// Get the maps of countries to launch sites
-	const CountryReq = await fetch('/api/FetchCountries');
-	const CountryRes = await CountryReq.json();
-	Countries = CountryRes.Countries;
-	Sites = CountryRes.Sites;
-
-	const SortedCountries = Object.entries(Countries).sort((a, b) => a[0].localeCompare(b[0]));
-	Countries = Object.fromEntries(SortedCountries);
 	
 	// Set up the countries dropdown
 	const Options = document.getElementById('CountryOptions');
@@ -122,7 +114,6 @@ async function Init() {
         `;
 		Options.append(label);
 	});
-	window.UpdateCountrySelection();
 
 	// Get the initial catalog of data
 	console.log('Fetching initial data');
@@ -133,6 +124,11 @@ async function Init() {
 	console.log('Initializing satellites');
 	const SatrecMap = new Map();
 	CatalogRes.forEach(sat => {
+		// Initialize the country to launch site mapping
+		if (!CountryToSites.has(sat.country)) 
+			CountryToSites.set(sat.country, new Set());
+		CountryToSites.get(sat.country).add(sat.launch_site);
+
 		SatrecMap.set(sat.norad_id, twoline2satrec(sat.tle_line1, sat.tle_line2));
 		const Point = Points.add({
 			position: Cartesian3.ZERO,
@@ -151,6 +147,7 @@ async function Init() {
 	PositionsBuffer = new ArrayBuffer(DetailMap.size * 7 * 8);
 	WorkerBuffer = new ArrayBuffer(DetailMap.size * 7 * 8);
 
+	window.UpdateCountrySelection();
 	await window.Search();
 	viewer.scene.preUpdate.addEventListener(TickUpdate);
 	document.getElementById('LoadingOverlay').remove();
@@ -444,7 +441,7 @@ window.UpdateCountrySelection = function(){
 	let LaunchSites = new Set();
 	Selected.forEach((cb) => {
 		if (cb.value == 'All') return;
-		Sites[cb.value].forEach(Site => LaunchSites.add(Site));
+		CountryToSites.get(cb.value).forEach(Site => LaunchSites.add(Site));
 	});
 	LaunchSites = [...LaunchSites].sort();
 
