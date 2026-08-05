@@ -1,12 +1,12 @@
 import { Ion, Viewer, Cartesian3, Color, JulianDate, PointPrimitiveCollection, ScreenSpaceEventHandler, ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
 import { twoline2satrec, gstime, eciToGeodetic, propagate } from "satellite.js";
-import { inject as InjectAnalytics } from "@vercel/analytics";
-import { inject as InjectSpeedInsights } from "@vercel/speed-insights";
+import { inject } from "@vercel/analytics";
+import { injectSpeedInsights } from "@vercel/speed-insights";
 import SatWorker from "/helpers/SatWorker.js?worker";
 import Countries from "../data/Countries.json";
 
-InjectAnalytics();
-InjectSpeedInsights();
+inject();
+injectSpeedInsights();
 
 // Setup viewport and variables
 Ion.defaultAccessToken = import.meta.env.VITE_token;
