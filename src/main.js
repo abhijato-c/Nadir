@@ -4,6 +4,7 @@ import { inject } from "@vercel/analytics";
 import { injectSpeedInsights } from "@vercel/speed-insights";
 import SatWorker from "/helpers/SatWorker.js?worker";
 import Countries from "../data/Countries.json";
+import Sites from "../data/Sites.json";
 
 inject();
 injectSpeedInsights();
@@ -107,7 +108,7 @@ async function Init() {
 	`;
 	Options.append(SelectAll);
 
-	Object.entries(Countries).forEach(([name, code]) => {
+	Object.entries(Countries).forEach(([code, name]) => {
 		const label = document.createElement('label');
 		label.className = 'MultiselectItem';
 		label.innerHTML = `
@@ -361,8 +362,8 @@ window.SatClicked = async function (SatId) {
 	document.getElementById("DetailNorad").textContent = Detail.norad_id;
 	document.getElementById("DetailIntl").textContent = Detail.intl_designator;
 	document.getElementById("DetailDate").textContent = Detail.launch_date.split('T')[0];
-	document.getElementById("DetailCountry").textContent = Object.keys(Countries).find(c => Countries[c] === Detail.country) || Detail.country;
-	document.getElementById("DetailSite").textContent = Detail.launch_site;
+	document.getElementById("DetailCountry").textContent = Countries[Detail.country] || Detail.country;
+	document.getElementById("DetailSite").textContent = Sites[Detail.launch_site] || Detail.launch_site;
 	document.getElementById("DetailApoapsis").textContent = Detail.apoapsis;
 	document.getElementById("DetailPeriapsis").textContent = Detail.periapsis;
 	document.getElementById("DetailInclination").textContent = Detail.inclination;
@@ -467,7 +468,7 @@ window.UpdateCountrySelection = function(){
 		label.className = 'MultiselectItem';
 		label.innerHTML = `
             <input type="checkbox" value="${Site}" checked onchange="UpdateSiteSelection()">
-            <span>${Site}</span>
+            <span>${Sites[Site] || Site}</span>
 			`;
 		SiteOptions.append(label);
 	}
