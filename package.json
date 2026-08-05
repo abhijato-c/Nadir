@@ -16,8 +16,12 @@
     "@neondatabase/serverless": "^1.1.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.4.0",
+    "@vercel/speed-insights": "^2.0.0",
     "cesium": "^1.141.0",
     "dotenv": "^17.4.2",
     "satellite.js": "^7.0.1"
+  },
+  "allowScripts": {
+    "protobufjs@8.5.0": true
   }
 }
