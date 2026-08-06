@@ -89,6 +89,7 @@ html, body {
 
 .ToggleBtn {
     position: fixed;
+    display: flex;
     top: 15px;
     height: 30px;
     width: 30px;
@@ -99,7 +100,6 @@ html, body {
     z-index: 101;
     color: rgb(180, 180, 180);
     padding: 0;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -112,6 +112,21 @@ html, body {
 
 #ToggleLeftSidebar { left: 15px; }
 #ToggleRightSidebar { right: 15px; }
+
+#OpenRepo { 
+    right: 15px; 
+    bottom: 35px; 
+    top: auto; 
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: var(--TextBright);
+}
+
+#OpenRepo img {
+    width: 95%;
+    height: 95%;
+}
 
 .Sidebar {
     width: 0;

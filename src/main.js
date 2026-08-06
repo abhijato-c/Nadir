@@ -560,4 +560,8 @@ window.PageTurn = function(Next) {
 	RenderPage();
 }
 
+window.OpenRepo = function() {
+	window.open('https://github.com/abhijato-c/Azimuthal', '_blank').focus();
+}
+
 Init();
