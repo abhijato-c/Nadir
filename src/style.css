@@ -12,8 +12,8 @@
     --AccentHoverGradient: linear-gradient(135deg, hsl(195, 100%, 50%), hsl(210, 100%, 45%));
 
     --TextBright: hsl(0, 0%, 100%);
-    --TextPrimary: hsl(210, 25%, 95%);
-    --TextSecondary: hsl(215, 16%, 72%);
+    --TextPrimary: hsl(210, 23%, 95%);
+    --TextSecondary: hsl(214, 16%, 72%);
     --TextMuted: hsl(215, 12%, 50%);
 
     --BorderDim: hsl(225, 12%, 16%);
@@ -94,7 +94,7 @@ html, body {
     height: 30px;
     width: 30px;
     background-color: rgba(0, 0, 0, 0.2);
-    border: 2px solid rgb(200, 200, 200);
+    border: 2px solid #C8C8C8;
     border-radius: 10%;
     cursor: pointer;
     z-index: 101;
@@ -107,7 +107,7 @@ html, body {
 .ToggleBtn img{
     object-fit: contain;
     width: 80%;
-    height: 90%;
+    height: 80%;
 }
 
 #ToggleLeftSidebar { left: 15px; }
