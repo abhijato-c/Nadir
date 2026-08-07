@@ -1,4 +1,8 @@
-import { Ion, Viewer, Cartesian3, Color, JulianDate, PointPrimitiveCollection, ScreenSpaceEventHandler, ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
+import { 
+	Ion, Viewer, Cartesian3, Color, JulianDate, ClockRange, PointPrimitiveCollection, ScreenSpaceEventHandler, 
+	ScreenSpaceEventType, NearFarScalar, CallbackProperty, BoundingSphere, PolylineCollection, Material, UrlTemplateImageryProvider, 
+	ImageryLayer, knockout 
+} from 'cesium';
 import { twoline2satrec, gstime, eciToGeodetic, propagate } from "satellite.js";
 import { inject } from "@vercel/analytics";
 import { injectSpeedInsights } from "@vercel/speed-insights";
@@ -39,6 +43,8 @@ viewer.scene.fog.enabled = false;
 
 const ClickAOE = 3;
 const PageLength = 50;
+const FFSpeedLimit = 10;
+const DateRange = 1 * 24 * 60 * 60 * 1000;
 const handler = new ScreenSpaceEventHandler(viewer.scene.canvas);
 const Points = viewer.scene.primitives.add(new PointPrimitiveCollection());
 const PointsMap = new Map();
@@ -92,6 +98,15 @@ const OrbitLine = Orbits.add({
 	material: Material.fromType("Color", { color: Color.RED })
 });
 const OrbitalSamples = 100;
+
+// Override speed
+knockout.getObservable(viewer.clockViewModel, 'multiplier').subscribe((speed) => {
+    if (Math.abs(speed) > FFSpeedLimit) {
+    	const clamped = Math.sign(speed) * FFSpeedLimit;
+    	viewer.clockViewModel.multiplier = clamped;
+    	viewer.clock.multiplier = clamped;
+    }
+  });
 
 async function Init() {
 	// Get the list of images
@@ -153,6 +168,15 @@ async function Init() {
 	PositionsBuffer = new ArrayBuffer(DetailMap.size * 7 * 8);
 	WorkerBuffer = new ArrayBuffer(DetailMap.size * 7 * 8);
 
+	// Clamp date range
+	const StartJulian = JulianDate.fromDate(new Date(Date.now() - DateRange));
+	const EndJulian = JulianDate.fromDate(new Date(Date.now() + DateRange));
+	viewer.clock.startTime = StartJulian;
+	viewer.clock.stopTime = EndJulian;
+	viewer.clock.clockRange = ClockRange.CLAMPED;
+	viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime);
+
+	// Initial search
 	window.UpdateCountrySelection();
 	await window.Search();
 	viewer.scene.preUpdate.addEventListener(TickUpdate);
@@ -172,9 +196,9 @@ function TickUpdate(scene, time) {
 		pt.position = TempPos;
 	}
 
-	if (CurrTime < LastUpdate + UpdateInterval) return;
+	if (CurrTime < LastUpdate + UpdateInterval && CurrTime > LastUpdate - UpdateInterval) return;
 	LastUpdate = CurrTime;
-
+	
 	if (!WorkerBusy && (CurrTime < CacheT0 || CurrTime > CacheT1 - SafetyBuffer)) {
 		WorkerBusy = true;
 		Worker.postMessage({
